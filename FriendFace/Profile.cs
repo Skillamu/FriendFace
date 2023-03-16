@@ -8,32 +8,35 @@ namespace FriendFace
 {
     public class Profile
     {
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public int Age { get; private set; }
-        public string From { get; private set; }
+        private List<Profile> Friends { get; set; }
+        public string Name { get; private set; }
 
-        public Profile(string firstName, string lastName, int age, string from)
+        public Profile(string name)
         {
-            FirstName = firstName;
-            LastName = lastName;
-            Age = age;
-            From = from;
+            Name = name;
         }
 
-        public void AddFriend()
+        public void AddFriend(Profile profile)
         {
-
+            Friends = new List<Profile>();
+            Friends.Add(profile);
         }
 
-        public void RemoveFriend()
+        public void RemoveFriend(Profile profile)
         {
-
+            int index = Friends.FindIndex(friend => friend.Name == profile.Name);
+            if (index != -1)
+            {
+                Friends.RemoveAt(index);
+            }
         }
 
-        public void ShowFriends()
+        public void PrintFriends()
         {
-
+            foreach (var friend in Friends)
+            {
+                Console.WriteLine(friend.Name);
+            }
         }
     }
 }
