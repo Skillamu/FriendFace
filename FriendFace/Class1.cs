@@ -8,18 +8,18 @@ namespace FriendFace
 {
     public class Class1
     {
-        private Profile loggedInUser;
-        private List<Profile> users;
+        private Profile LoggedInUser { get; set; }
+        private List<Profile> Users { get; set; }
 
         public Class1()
         {
-            loggedInUser = new Profile("Åmund");
+            LoggedInUser = new Profile("Åmund");
 
-            users = new List<Profile>();
-            users.Add(new Profile("Per"));
-            users.Add(new Profile("Anita"));
-            users.Add(new Profile("Frank"));
-            users.Add(new Profile("Bente"));
+            Users = new List<Profile>();
+            Users.Add(new Profile("Per"));
+            Users.Add(new Profile("Anita"));
+            Users.Add(new Profile("Frank"));
+            Users.Add(new Profile("Bente"));
 
             HomeMenu();
         }
@@ -49,7 +49,7 @@ namespace FriendFace
                     FriendList();
                     break;
                 case "4":
-                    Console.WriteLine("Loading action 4...");
+                    FriendProfileInfo();
                     break;
             }
         }
@@ -57,18 +57,18 @@ namespace FriendFace
         public void AddFriend()
         {
             Console.Clear();
-            Console.WriteLine("--- Add Friend ---");
-            foreach (Profile user in users)
+            Console.WriteLine("--- Add Friend ---\n");
+            foreach (Profile user in Users)
             {
                 Console.WriteLine($"{user.Name}");
             }
-            Console.Write("\nEnter the person you want to add: ");
+            Console.Write("\nEnter the user you want to add: ");
             var userInput = Console.ReadLine();
-            var requestedUser = users.Find(x => x.Name == userInput);
+            var requestedUser = Users.Find(x => x.Name == userInput);
 
             if (requestedUser != null)
             {
-                loggedInUser.Friends.Add(requestedUser);
+                LoggedInUser.AddToFriendList(requestedUser);
             }
             HomeMenu();
         }
@@ -76,18 +76,15 @@ namespace FriendFace
         public void RemoveFriend()
         {
             Console.Clear();
-            Console.WriteLine("--- Remove Friend ---");
-            foreach (Profile friend in loggedInUser.Friends)
-            {
-                Console.WriteLine(friend.Name);
-            }
-            Console.Write("\nEnter the person you want to remove: ");
+            Console.WriteLine("--- Remove Friend ---\n");
+            LoggedInUser.ShowFriends();
+            Console.Write("\nEnter the friend you want to remove: ");
             var userInput = Console.ReadLine();
-            var requestedFriend = loggedInUser.Friends.Find(x => x.Name == userInput);
+            var requestedFriend = LoggedInUser.GetRequestedFriend(userInput);
 
             if (requestedFriend != null)
             {
-                loggedInUser.Friends.Remove(requestedFriend);
+                LoggedInUser.RemoveFromFriendList(requestedFriend);
             }
             HomeMenu();
         }
@@ -96,10 +93,7 @@ namespace FriendFace
         {
             Console.Clear();
             Console.WriteLine("--- Friend List ---\n");
-            foreach (Profile friend in loggedInUser.Friends)
-            {
-                Console.WriteLine(friend.Name);
-            }
+            LoggedInUser.ShowFriends();
             Console.WriteLine("\nPress ENTER to go back to the home menu...");
             var input = Console.ReadKey(true);
 
@@ -110,6 +104,28 @@ namespace FriendFace
             HomeMenu();
         }
 
-        public void FriendProfileInfo() { }
+        public void FriendProfileInfo()
+        {
+            Console.Clear();
+            Console.WriteLine("--- Friend Profile Info ---\n");
+            LoggedInUser.ShowFriends();
+            Console.Write("\nEnter the friend you want to see the profile of: ");
+            var userInput = Console.ReadLine();
+            var requestedFriend = LoggedInUser.GetRequestedFriend(userInput);
+
+            if (requestedFriend != null)
+            {
+                Console.Clear();
+                Console.WriteLine($"--- {requestedFriend.Name} ---\n");
+                Console.WriteLine("\nPress ENTER to go back to the home menu...");
+                var input = Console.ReadKey(true);
+                while (input.Key != ConsoleKey.Enter)
+                {
+                    input = Console.ReadKey(true);
+                }
+            }
+            HomeMenu();
+        }
     }
 }
+
